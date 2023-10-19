@@ -85,27 +85,53 @@ export const Home = () => {
   };
 
   return (
-    <div>
-      <h1>Recipes</h1>
-      <ul>
+    <div className="bg-gray-100 min-h-screen p-8">
+      <h1 className="text-center text-3xl font-sans font-bold mb-4">Recipes</h1>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {recipes.map((recipe) => (
-          <li key={recipe._id}>
-            <div>
-              <h2>{recipe.name}</h2>
-              <button onClick={() => toggleFavorite(recipe._id)}>
+          <div
+            key={recipe._id}
+            className="bg-white p-4 shadow rounded-lg transition-transform transform hover:scale-105"
+          >
+            <h2 className="text-lg font-semibold">{recipe.name}</h2>
+            <p className="mt-2 text-gray-700">{recipe.description}</p>
+            <h3 className="text-lg mt-2 font-semibold">Ingredients:</h3>
+            <ul className="pl-4">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index} className="text-gray-700">
+                  {ingredient}
+                </li>
+              ))}
+            </ul>
+            <img
+              src={recipe.imageUrl}
+              alt={recipe.name}
+              className="mt-4 w-full h-40 object-cover"
+            />
+            <div className="mt-4 flex justify-between">
+              <button
+                onClick={() => toggleFavorite(recipe._id)}
+                className={`px-4 py-2 rounded ${
+                  isRecipeFavorite(recipe._id)
+                    ? "bg-red-500 text-white"
+                    : "bg-green-500 text-white"
+                }`}
+              >
                 {isRecipeFavorite(recipe._id)
                   ? "Remove Favorite"
                   : "Add to Favorites"}
               </button>
+              <button
+                onClick={() => deleteRecipe(recipe._id)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
             </div>
-            <div className="instructions">
-              <p>{recipe.instructions}</p>
-            </div>
-            <img src={recipe.imageUrl} alt={recipe.name} />
-            <button onClick={() => deleteRecipe(recipe._id)}>delete</button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
