@@ -3,10 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { storage } from "../firebase/firebase.init";
-import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 
- const CreateNew = () => {
-  const [cookies, _] = useCookies(["access_token"]);
+const CreateNew = () => {
+  const [cookies] = useCookies(["access_token"]);
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",

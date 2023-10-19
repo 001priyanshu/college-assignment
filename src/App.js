@@ -7,6 +7,7 @@ import Recipe from "./pages/CreateRecipe/Recipe";
 function App() {
   return (
     <Routes>
+      <Route path="/" exact element={<Landing />} />
       <Route path="/signup" exact element={<SignUp />} />
       <Route path="/signin" exact element={<SignIn />} />
       <Route path="/" exact element={<Landing />} />
