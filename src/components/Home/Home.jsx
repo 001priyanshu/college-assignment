@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useGetUserID } from "../../hooks/useGetUserID";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import RecipeCard from "./RecipeCard ";
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
   const [recipes, setRecipes] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
-
-  const userID = useGetUserID();
 
   const fetchRecipes = async () => {
     try {
@@ -28,14 +26,17 @@ export const Home = () => {
     fetchRecipes();
   }, []);
 
+  const isRecipeFavorite = (id) => favoriteRecipes.includes(id);
+
   const toggleFavorite = async (recipeID) => {
     try {
       if (isRecipeFavorite(recipeID)) {
         // Remove from favorites
-        await axios.delete(
+        await axios.put(
           `http://localhost:5000/api/user/removeFavRecipe/${recipeID}`,
+          {},
           {
-            data: { userID, recipeID },
+            headers: { Authorization: cookies.access_token },
           }
         );
         setFavoriteRecipes((prevFavorites) =>
@@ -45,28 +46,28 @@ export const Home = () => {
         // Add to favorites
         await axios.put(
           `http://localhost:5000/api/user/addFavRecipe/${recipeID}`,
+          {},
           {
-            recipeID,
-            userID,
+            headers: { Authorization: cookies.access_token },
           }
         );
         setFavoriteRecipes([...favoriteRecipes, recipeID]);
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const isRecipeFavorite = (id) => favoriteRecipes.includes(id);
-
   const deleteRecipe = async (recipeID) => {
+    console.log(recipeID);
     try {
       await axios.delete(
-        `http://localhost:5000/api/recipe/deleteRecipe/${recipeID}`
+        `http://localhost:5000/api/recipe/deleteRecipe/${recipeID}`,
+        {
+          headers: { authorization: cookies.access_token },
+        }
       );
-      setRecipes((prevRecipes) =>
-        prevRecipes.filter((recipe) => recipe._id !== recipeID)
-      );
+      fetchRecipes();
     } catch (err) {
       console.log(err);
     }
@@ -74,56 +75,20 @@ export const Home = () => {
 
   return (
     <div>
-
-   
-      <h1 className="text-center text-3xl font-sans font-bold mt-8 ">Recipes</h1>
-    <div className=" bg-gray-100 min-h-screen p-8 flex  justify-center">
-      
-        <div className="   space-y-8 flex flex-col w-1/3">
+      <h1 className="text-center text-3xl font-sans font-bold mt-8">Recipes</h1>
+      <div className="bg-gray-100 min-h-screen p-8 flex justify-center">
+        <div className="space-y-8 flex flex-col w-1/3">
           {recipes.map((recipe) => (
-            <div
+            <RecipeCard
               key={recipe._id}
-              className="bg-white p-4 shadow rounded-lg transition-transform transform hover:scale-105"
-            >
-              <h2 className="text-lg font-semibold">{recipe.name}</h2>
-              <p className="mt-2 text-gray-700">{recipe.description}</p>
-              <h3 className="text-lg mt-2 font-semibold">Ingredients:</h3>
-              <ul className="pl-4">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="text-gray-700">
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
-              <img
-                src={recipe.imageUrl}
-                alt={recipe.name}
-                className="mt-4 w-full h-60 object-cover"
-              />
-              <div className="mt-4 flex justify-between">
-                <button
-                  onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 rounded ${isRecipeFavorite(recipe._id)
-                      ? "bg-red-500 text-white"
-                      : "bg-green-500 text-white"
-                    }`}
-                >
-                  {isRecipeFavorite(recipe._id)
-                    ? "Remove Favorite"
-                    : "Add to Favorites"}
-                </button>
-                <button
-                  onClick={() => deleteRecipe(recipe._id)}
-                  className="px-4 py-2 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
+              recipe={recipe}
+              isFavorite={isRecipeFavorite(recipe._id)}
+              onToggleFavorite={() => toggleFavorite(recipe._id)}
+              onDelete={() => deleteRecipe(recipe._id)}
+            />
           ))}
         </div>
       </div>
-      </div>
-     
+    </div>
   );
 };
