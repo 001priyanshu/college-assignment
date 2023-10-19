@@ -1,41 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import axios from "axios";
+import { useCookies } from "react-cookie";
+import { Navigate, useNavigate } from "react-router-dom";
 
-const SignUp = ({ handleSubmit, error, userId, setUserId }) => {
-
-
+const Signup = () => {
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        const res = await axios.post(
+          "https://tiny-lime-cougar-gown.cyclic.app/api/user/signup",
+          {
+            name,
+            email,
+            password,
+          }
+        );
+        console.log(res);
+        alert("Registration Completed! Now login.");
+        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
     return (
-        <>
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="bg-white shadow-lg rounded-lg p-8 w-full sm:w-96">
-                    <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-                                Name
-                            </label>
-                            <input
-                                className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="name"
-                                type="text"
-                                placeholder="Enter userId"
-                                value={userId}
-                                onChange={(e) => setUserId(e.target.value)}
-                            />
-                        </div>
-                        {error && <p className="text-red-500 mb-4">{error}</p>}
-                        <div className="flex justify-center">
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                type="submit"
-                            >
-                                Sign Up
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </>
+      <div className="auth-container">
+        <form onSubmit={handleSubmit}>
+          <h2>Register</h2>
+          <div className="form-group">
+            <label htmlFor="name">name:</label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">email:</label>
+            <input
+              type="text"
+              id="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <button type="submit">Register</button>
+        </form>
+      </div>
     );
-};
+  };
+  
 
-export default SignUp;
+export default Signup
