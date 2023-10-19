@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useGetUserID } from "../../hooks/useGetUserID";
 import { useCookies } from "react-cookie";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
@@ -73,24 +76,43 @@ export const Home = () => {
   };
 
   return (
-    <div>
-
-   
-      <h1 className="text-center text-3xl font-sans font-bold mt-8 ">Recipes</h1>
-    <div className=" bg-gray-100 min-h-screen p-8 flex  justify-center">
-      
-        <div className="   space-y-8 flex flex-col w-1/3">
+    <div className="bg-gray-100 min-h-screen p-8">
+      <h1 className="text-center p-8 text-4xl font-serif font-extrabold m-y-8 text-emerald-300">
+        Recipes
+      </h1>
+      <div className="flex justify-center">
+        <div className="space-y-8 w-full md:w-1/2">
           {recipes.map((recipe) => (
             <div
               key={recipe._id}
-              className="bg-white p-4 shadow rounded-lg transition-transform transform hover:scale-105"
+              className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
             >
-              <h2 className="text-lg font-semibold">{recipe.name}</h2>
-              <p className="mt-2 text-gray-700">{recipe.description}</p>
-              <h3 className="text-lg mt-2 font-semibold">Ingredients:</h3>
-              <ul className="pl-4">
+              <div className="flex justify-between mb-4">
+                <button
+                  onClick={() => toggleFavorite(recipe._id)}
+                  className={`px-4 py-2 rounded ${isRecipeFavorite(recipe._id)
+                    ? "bg-red-500 text-white"
+                    : "bg-green-500 text-white"
+                    }`}
+                >
+                  <FontAwesomeIcon icon={faHeart} />
+                  {isRecipeFavorite(recipe._id) ? " Remove Favorite" : " Add to Favorites"}
+                </button>
+                <button
+                  onClick={() => deleteRecipe(recipe._id)}
+                  className="px-4 py-2 bg-red-500 text-white rounded"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+              <h2 className="text-xl font-semibold text-indigo-800">{recipe.name}</h2>
+              <p className="mt-2 text-gray-700 text-lg">{recipe.description}</p>
+              <h3 className="text-lg mt-2 font-semibold text-indigo-800">
+                Ingredients:
+              </h3>
+              <ul className="pl-4 text-gray-700">
                 {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="text-gray-700">
+                  <li key={index} className="text-lg">
                     {ingredient}
                   </li>
                 ))}
@@ -98,32 +120,12 @@ export const Home = () => {
               <img
                 src={recipe.imageUrl}
                 alt={recipe.name}
-                className="mt-4 w-full h-60 object-cover"
+                className="mt-4 w-full h-96 object-cover rounded"
               />
-              <div className="mt-4 flex justify-between">
-                <button
-                  onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 rounded ${isRecipeFavorite(recipe._id)
-                      ? "bg-red-500 text-white"
-                      : "bg-green-500 text-white"
-                    }`}
-                >
-                  {isRecipeFavorite(recipe._id)
-                    ? "Remove Favorite"
-                    : "Add to Favorites"}
-                </button>
-                <button
-                  onClick={() => deleteRecipe(recipe._id)}
-                  className="px-4 py-2 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
-              </div>
             </div>
           ))}
         </div>
       </div>
-      </div>
-     
+    </div>
   );
-};
+}
