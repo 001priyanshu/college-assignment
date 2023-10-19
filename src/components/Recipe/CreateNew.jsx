@@ -43,11 +43,9 @@ const CreateNew = () => {
         const imageRef = ref(storage, `images/${recipe.photo.name}`);
         const url = await getDownloadURL(imageRef);
 
-        setRecipe({ ...recipe, imageUrl: url });
-
         await axios.post(
           "http://localhost:5000/api/recipe/createRecipe",
-          { ...recipe },
+          { ...recipe, imageUrl: url },
           {
             headers: { authorization: cookies.access_token },
           }
