@@ -24,20 +24,8 @@ export const Home = () => {
     }
   };
 
-  const fetchFavoriteRecipes = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/recipes/favoriteRecipes/ids/${userID}`
-      );
-      setFavoriteRecipes(response.data.favoriteRecipes);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     fetchRecipes();
-    // fetchFavoriteRecipes();
   }, []);
 
   const toggleFavorite = async (recipeID) => {
