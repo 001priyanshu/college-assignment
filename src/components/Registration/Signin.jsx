@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
-  const [setCookies] = useCookies(["access_token"]);
+  const [cookies, setCookie] = useCookies(["access_token"]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,7 +19,8 @@ const Signin = () => {
         email,
         password,
       });
-      setCookies("access_token", JSON.stringify(result.data.token));
+      console.log(result);
+      setCookie("access_token", JSON.stringify(result.data.token));
       window.localStorage.setItem("userID", JSON.stringify(result.data.user));
       navigate("/");
     } catch (error) {
