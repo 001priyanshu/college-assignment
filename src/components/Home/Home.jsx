@@ -76,13 +76,13 @@ export const Home = () => {
   };
   const filteredRecipes = searchInput
     ? recipes.filter((recipe) => {
-        const searchStr = searchInput.toLowerCase();
-        return (
-          recipe.name.toLowerCase().includes(searchStr) ||
-          recipe.description.toLowerCase().includes(searchStr) ||
-          recipe.mealType.toLowerCase().includes(searchStr)
-        );
-      })
+      const searchStr = searchInput.toLowerCase();
+      return (
+        recipe.name.toLowerCase().includes(searchStr) ||
+        recipe.description.toLowerCase().includes(searchStr) ||
+        recipe.mealType.toLowerCase().includes(searchStr)
+      );
+    })
     : recipes;
 
   return (
@@ -90,7 +90,7 @@ export const Home = () => {
       <h1 className="text-center p-8 text-4xl font-serif font-extrabold m-y-8 text-blue-500">
         Recipes
       </h1>
-       <div className="flex justify-center">
+      <div className="flex justify-center">
         <input
           type="text"
           placeholder="Search for recipes..."
@@ -115,8 +115,14 @@ export const Home = () => {
                     }`}
                 >
                   <FontAwesomeIcon icon={faHeart} />
-                  
+
                 </button>
+
+                <div className="text-center">
+
+                  <h2 className="text-2xl font-bold  text-indigo-800">{recipe.name}</h2>
+                  <h4 className="text-xl mt-2 text-gray-700 font-bold">{recipe.mealType}</h4>
+                </div>
                 <button
                   onClick={() => deleteRecipe(recipe._id)}
                   className="px-4 py-2 bg-red-500 text-white rounded"
@@ -124,22 +130,11 @@ export const Home = () => {
                   <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h2 className="text-2xl font-semibold text-indigo-800">{recipe.name}</h2>
-                  <p className="mt-2 text-gray-700">{recipe.description}</p>
-                </div>
-                <div>
-                  <div className="text-right">
-                    <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
-                    <h3 className="text-lg mt-2 font-semibold text-indigo-800">Instructions</h3>
-                    <p className="text-gray-700 text-lg">{recipe.instructions}</p>
-                  </div>
-                </div>
-              </div>
+              <p className="mt-2 text-gray-700  text-center">{recipe.description}</p>
+
               <hr className="my-4 border-t border-gray-300" />
               <div>
-                <div className="text-right">
+                <div className="">
                   <FontAwesomeIcon icon={faList} className="text-indigo-500 text-2xl" />
                   <h3 className="text-lg mt-2 font-semibold text-indigo-800">Ingredients</h3>
                   <ul className="pl-4 text-gray-700">
@@ -151,12 +146,21 @@ export const Home = () => {
                   </ul>
                 </div>
               </div>
+              <hr className="my-4 border-t border-gray-300" />
+              <div>
+                <div className="">
+                  <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
+                  <h3 className="text-lg mt-2 font-semibold text-indigo-800">Instructions</h3>
+                  <p className="text-gray-700 text-lg">{recipe.instructions}</p>
+                </div>
+              </div>
+
               <img
                 src={recipe.imageUrl}
                 alt={recipe.name}
                 className="mt-4 w-full h-96 object-cover rounded"
               />
-                        
+
             </div>
           ))}
         </div>

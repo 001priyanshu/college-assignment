@@ -22,7 +22,7 @@ const NavBar = () => {
               <Link to="/create-recipe">Create New Recipe</Link>
             </li>
             <li>
-              <Link to="">My Favourite</Link>
+              <Link to="/fav-recipe">My Favourite</Link>
             </li>
             <li onClick={handleLogOut}>
               <Link to="collapsible.html">Log Out</Link>

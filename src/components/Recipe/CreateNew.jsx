@@ -21,7 +21,7 @@ const CreateNew = () => {
     ingredients: [],
     instructions: "",
     imageUrl: "",
-    maealType:"",
+    mealType:"",
   });
 
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const CreateNew = () => {
   const handleRecipeType = (selectedOption) => {
     const newMealType = selectedOption.value;
     
-    setRecipe({ ...recipe, maealType: newMealType });
+    setRecipe({ ...recipe, mealType: newMealType });
   
   };
 
