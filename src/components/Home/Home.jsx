@@ -8,14 +8,29 @@ import {
   faBook,
   faList,
 } from "@fortawesome/free-solid-svg-icons";
-
-const userID = JSON.parse(window.localStorage.getItem("userID"));
+import { useGetUserID } from "../../hooks/useGetUserID";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
   const [recipes, setRecipes] = useState([]);
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const user = useGetUserID();
+  const navigate = useNavigate();
+
+  const navigateSignIn = () => {
+    if (cookies.access_token.length === 0) {
+      navigate("/signin");
+      return;
+    }
+  };
+
+  const checkLoggedIn = () => {
+    if (cookies.access_token.length === 0) {
+      return false;
+    } else return true;
+  };
 
   const fetchRecipes = async () => {
     try {
@@ -31,13 +46,31 @@ export const Home = () => {
     }
   };
 
+  const fetchFavRecipes = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/user/favoriteRecipes/${
+          JSON.parse(user)._id
+        }`,
+        {
+          headers: { authorization: cookies.access_token },
+        }
+      );
+      setFavoriteRecipes(response.data.favoriteRecipes);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     fetchRecipes();
+    fetchFavRecipes();
   }, []);
 
   const isRecipeFavorite = (id) => favoriteRecipes.includes(id);
 
   const toggleFavorite = async (recipeID) => {
+    navigateSignIn();
     try {
       if (isRecipeFavorite(recipeID)) {
         // Remove from favorites
@@ -68,6 +101,7 @@ export const Home = () => {
   };
 
   const deleteRecipe = async (recipeID) => {
+    navigateSignIn();
     try {
       await axios.delete(
         `http://localhost:5000/api/recipe/deleteRecipe/${recipeID}`,
@@ -93,11 +127,11 @@ export const Home = () => {
     : recipes;
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
-      <h1 className="text-center p-8 text-4xl font-serif font-extrabold m-y-8 text-blue-500">
+    <div className="bg-gray-100 min-h-screen p-2">
+      <h1 className="text-center p-8 text-4xl font-serif font-extrabold m-y-2 text-blue-500">
         Recipes
       </h1>
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-8">
         <input
           type="text"
           placeholder="Search for recipes..."
@@ -116,7 +150,7 @@ export const Home = () => {
               <div className="flex justify-between mb-4">
                 <button
                   onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 text-3xl  rounded ${
+                  className={`px-4 py-2 text-3xl rounded ${
                     isRecipeFavorite(recipe._id)
                       ? "text-red-500 "
                       : "text-blue-500 "
@@ -134,16 +168,14 @@ export const Home = () => {
                   </h4>
                 </div>
 
-                {userID && recipe.userId === userID._id ? (
-                  <button
-                    onClick={() => deleteRecipe(recipe._id)}
-                    className="px-4 py-2 text-3xl text-red-500 rounded"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                ) : (
-                  <div></div>
-                )}
+                <button
+                  onClick={() => deleteRecipe(recipe._id)}
+                  className={`px-4 py-2 text-3xl ${
+                    checkLoggedIn() === true ? "text-red-500 " : "text-white"
+                  }  rounded`}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </div>
               <p className="mt-2 text-gray-700  text-center">
                 {recipe.description}
