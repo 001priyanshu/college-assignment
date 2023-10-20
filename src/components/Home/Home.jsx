@@ -5,6 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTrash, faBook, faList } from "@fortawesome/free-solid-svg-icons";
 
 
+const userID = JSON.parse(window.localStorage.getItem("userID"));
+
+
+
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
   const [recipes, setRecipes] = useState([]);
@@ -20,6 +24,7 @@ export const Home = () => {
         }
       );
       setRecipes(response.data.allRecipes);
+
     } catch (err) {
       console.log(err);
     }
@@ -109,7 +114,7 @@ export const Home = () => {
               <div className="flex justify-between mb-4">
                 <button
                   onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id)
+                  className={`px-4 py-2 text-3xl  rounded ${isRecipeFavorite(recipe._id)
                     ? "text-red-500 "
                     : "text-blue-500 "
                     }`}
@@ -123,13 +128,15 @@ export const Home = () => {
                   <h2 className="text-2xl font-bold  text-indigo-800">{recipe.name}</h2>
                   <h4 className="text-xl mt-2 text-gray-700 font-bold">{recipe.mealType}</h4>
                 </div>
-                <button
-                  onClick={() => deleteRecipe(recipe._id)}
-                  className="px-4 py-2 text-3xl text-red-500 rounded"
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-
-                </button>
+            
+                {userID && recipe.userId === userID._id ? (
+                  <button
+                    onClick={() => deleteRecipe(recipe._id)}
+                    className="px-4 py-2 text-3xl text-red-500 rounded"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                ) : <div></div>}  
               </div>
               <p className="mt-2 text-gray-700  text-center">{recipe.description}</p>
 
@@ -153,8 +160,8 @@ export const Home = () => {
               <div>
                 <div className="">
                   <div className="flex">
-                  <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
-                  <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">Instructions</h3>
+                    <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
+                    <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">Instructions</h3>
                   </div>
                   <ul className="pl-4 text-gray-700">
                     {recipe.instructions.map((instruction, index) => (
