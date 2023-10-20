@@ -169,7 +169,7 @@ const FavouriteRecipe = () => {
         </div>
       ) : (
         <div className="flex justify-center">
-          <div className="space-y-8 w-full md:w-1/2">
+          <div className="space-y-8 w-full md:w-1/2 flex  flex-col  items-center">
             {filteredRecipes.map((recipe) => {
               if (isRecipeFavorite(recipe._id)) {
 
@@ -177,7 +177,7 @@ const FavouriteRecipe = () => {
                 return (
                   <div
                     key={recipe._id}
-                    className="bg-white p-4 shadow-lg rounded-lg "
+                    className="bg-white p-4 shadow-lg rounded-lg w-4/5 md:w-full"
                   >
                     <div className="flex justify-between mb-4">
                       <button

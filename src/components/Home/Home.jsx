@@ -150,7 +150,7 @@ export const Home = () => {
     : recipes;
 
   return (
-    <div className="bg-gray-100  min-h-screen p-2">
+    <div className="bg-gray-100  min-h-screen p-2 ">
       <h1 className="text-center p-8 text-4xl font-serif font-extrabold my-2 text-blue-500">
         Recipes
       </h1>
@@ -169,12 +169,12 @@ export const Home = () => {
         </div>
       ) : (
         <div className="flex justify-center">
-          <div className="space-y-8 w-full md:w-1/2">
+          <div className="space-y-8 w-full md:w-1/2  flex  flex-col  items-center">
             {filteredRecipes.map((recipe) => {
               return (
                 <div
                   key={recipe._id}
-                  className="bg-white p-4 shadow-lg rounded-lg"
+                  className="bg-white p-4 shadow-lg rounded-lg w-4/5 md:w-full"
                 >
                   <div className="flex justify-between mb-4">
                     <button
@@ -185,7 +185,7 @@ export const Home = () => {
                       <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faHeart} />
                       <div className="flex text-xl">
 
-                       
+                        
                       </div>
                     </button>
 
