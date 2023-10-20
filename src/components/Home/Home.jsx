@@ -109,9 +109,9 @@ export const Home = () => {
               <div className="flex justify-between mb-4">
                 <button
                   onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 rounded ${isRecipeFavorite(recipe._id)
-                    ? "bg-red-500 text-white"
-                    : "bg-blue-500 text-white"
+                  className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id)
+                    ? "text-red-500 "
+                    : "text-blue-500 "
                     }`}
                 >
                   <FontAwesomeIcon icon={faHeart} />
@@ -125,9 +125,10 @@ export const Home = () => {
                 </div>
                 <button
                   onClick={() => deleteRecipe(recipe._id)}
-                  className="px-4 py-2 bg-red-500 text-white rounded"
+                  className="px-4 py-2 text-3xl text-red-500 rounded"
                 >
                   <FontAwesomeIcon icon={faTrash} />
+                  
                 </button>
               </div>
               <p className="mt-2 text-gray-700  text-center">{recipe.description}</p>
