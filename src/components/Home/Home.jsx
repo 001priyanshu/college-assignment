@@ -36,12 +36,13 @@ export const Home = () => {
   const fetchRecipes = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/recipe/getAllRecipes",
+        "https://tiny-lime-cougar-gown.cyclic.app/api/recipe/getAllRecipes",
         {
           headers: { authorization: cookies.access_token },
         }
       );
       setRecipes(response.data.allRecipes);
+     
       setIsLoading(false);
     } catch (err) {
       console.log(err);
@@ -54,7 +55,7 @@ export const Home = () => {
   const fetchFavRecipes = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/user/favoriteRecipes/${loggedInuserId}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/user/favoriteRecipes/${loggedInuserId}`,
         {
           headers: { authorization: cookies.access_token },
         }
@@ -78,7 +79,7 @@ export const Home = () => {
       if (isRecipeFavorite(recipeID)) {
         // Remove from favorites
         await axios.put(
-          `http://localhost:5000/api/user/removeFavRecipe/${recipeID}`,
+          `https://tiny-lime-cougar-gown.cyclic.app/api/user/removeFavRecipe/${recipeID}`,
           {},
           {
             headers: { Authorization: cookies.access_token },
@@ -90,7 +91,7 @@ export const Home = () => {
       } else {
         // Add to favorites
         await axios.put(
-          `http://localhost:5000/api/user/addFavRecipe/${recipeID}`,
+          `https://tiny-lime-cougar-gown.cyclic.app/api/user/addFavRecipe/${recipeID}`,
           {},
           {
             headers: { Authorization: cookies.access_token },
@@ -107,7 +108,7 @@ export const Home = () => {
     navigateSignIn();
     try {
       await axios.delete(
-        `http://localhost:5000/api/recipe/deleteRecipe/${recipeID}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/recipe/deleteRecipe/${recipeID}`,
         {
           headers: { authorization: cookies.access_token },
         }
@@ -121,7 +122,7 @@ export const Home = () => {
   const handleAddComment = async (recipeID) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/comment/addComment/${recipeID}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/comment/addComment/${recipeID}`,
         {
           content: comment,
         },
@@ -184,16 +185,7 @@ export const Home = () => {
                       <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faHeart} />
                       <div className="flex text-xl">
 
-                        {isRecipeFavorite(recipe._id) ? (
-                          <>
-                            Tap to Remove
-                          </>
-
-                        ) : (
-                          <>
-                            Tap to  Add
-                          </>
-                        )}
+                       
                       </div>
                     </button>
 

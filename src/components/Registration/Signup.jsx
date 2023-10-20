@@ -27,7 +27,7 @@ const Signup = () => {
 
         url = await getDownloadURL(imageRef);
       }
-      const res = await axios.post("http://localhost:5000/api/user/signup", {
+      const res = await axios.post("https://tiny-lime-cougar-gown.cyclic.app/api/user/signup", {
         name,
         email,
         password,

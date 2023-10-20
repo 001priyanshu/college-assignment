@@ -79,7 +79,7 @@ const CreateNew = () => {
         const url = await getDownloadURL(imageRef);
 
         await axios.post(
-          "http://localhost:5000/api/recipe/createRecipe",
+          "https://tiny-lime-cougar-gown.cyclic.app/api/recipe/createRecipe",
           { ...recipe, imageUrl: url },
           {
             headers: { authorization: cookies.access_token },

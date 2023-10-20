@@ -29,15 +29,17 @@ const UpdateRecipe = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:5000/api/recipe/getRecipe/${recipeId}`, {
+            .get(`https://tiny-lime-cougar-gown.cyclic.app/api/recipe/getRecipe/${recipeId}`, {
                 headers: { authorization: cookies.access_token },
             })
             .then((response) => {
-                console.log(response.data.recipe);
+               
                 const existingRecipe = response.data.recipe;
+                // console.log(existingRecipe.imageUrl,"***");
                 setRecipe({
                     ...existingRecipe,
                     mealType: existingRecipe.mealType,
+                    imageUrl:existingRecipe.imageUrl
                 });
             })
             .catch((error) => {
@@ -98,14 +100,19 @@ const UpdateRecipe = () => {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
+            let url;
 
             if (selectedImage) {
                 const imageRef = ref(storage, `images/${selectedImage.name}`);
                 await uploadBytes(imageRef, selectedImage);
-                const url = await getDownloadURL(imageRef);
-
+                url = await getDownloadURL(imageRef);
+            }
+            else{
+                url= recipe.imageUrl;
+            }
+               
                 await axios.put(
-                    `http://localhost:5000/api/recipe/updateRecipe/${recipeId}`,
+                    `https://tiny-lime-cougar-gown.cyclic.app/api/recipe/updateRecipe/${recipeId}`,
                     { ...recipe, imageUrl: url },
                     {
                         headers: { authorization: cookies.access_token },
@@ -114,7 +121,7 @@ const UpdateRecipe = () => {
 
                 alert("Recipe Updated");
                 navigate("/");
-            }
+            
         } catch (error) {
             console.error(error);
         }

@@ -37,7 +37,7 @@ const FavouriteRecipe = () => {
   const fetchRecipes = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/recipe/getAllRecipes",
+        "https://tiny-lime-cougar-gown.cyclic.app/api/recipe/getAllRecipes",
         {
           headers: { authorization: cookies.access_token },
         }
@@ -55,7 +55,7 @@ const FavouriteRecipe = () => {
   const fetchFavRecipes = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/user/favoriteRecipes/${loggedInuserId}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/user/favoriteRecipes/${loggedInuserId}`,
         {
           headers: { authorization: cookies.access_token },
         }
@@ -79,7 +79,7 @@ const FavouriteRecipe = () => {
       if (isRecipeFavorite(recipeID)) {
         // Remove from favorites
         await axios.put(
-          `http://localhost:5000/api/user/removeFavRecipe/${recipeID}`,
+          `https://tiny-lime-cougar-gown.cyclic.app/api/user/removeFavRecipe/${recipeID}`,
           {},
           {
             headers: { Authorization: cookies.access_token },
@@ -91,7 +91,7 @@ const FavouriteRecipe = () => {
       } else {
         // Add to favorites
         await axios.put(
-          `http://localhost:5000/api/user/addFavRecipe/${recipeID}`,
+          `https://tiny-lime-cougar-gown.cyclic.app/api/user/addFavRecipe/${recipeID}`,
           {},
           {
             headers: { Authorization: cookies.access_token },
@@ -108,7 +108,7 @@ const FavouriteRecipe = () => {
     navigateSignIn();
     try {
       await axios.delete(
-        `http://localhost:5000/api/recipe/deleteRecipe/${recipeID}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/recipe/deleteRecipe/${recipeID}`,
         {
           headers: { authorization: cookies.access_token },
         }
@@ -122,7 +122,7 @@ const FavouriteRecipe = () => {
   const handleAddComment = async (recipeID) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/comment/addComment/${recipeID}`,
+        `https://tiny-lime-cougar-gown.cyclic.app/api/comment/addComment/${recipeID}`,
         {
           content: comment,
         },
