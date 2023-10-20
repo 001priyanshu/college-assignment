@@ -25,6 +25,8 @@ const FavouriteRecipe = () => {
   const navigate = useNavigate();
   const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [commentsVisible, setCommentsVisible] = useState(false);
+
 
   const navigateSignIn = () => {
     if (cookies.access_token.length === 0) {
@@ -47,6 +49,9 @@ const FavouriteRecipe = () => {
     }
   };
 
+  const toggleCommentsVisibility = () => {
+    setCommentsVisible(!commentsVisible);
+  };
   const fetchFavRecipes = async () => {
     try {
       const response = await axios.get(
@@ -172,29 +177,29 @@ const FavouriteRecipe = () => {
                 return (
                   <div
                     key={recipe._id}
-                    className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
+                    className="bg-white p-4 shadow-lg rounded-lg "
                   >
                     <div className="flex justify-between mb-4">
-                    <button
-                      onClick={() => toggleFavorite(recipe._id)}
-                      className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id) ? "text-red-500" : "text-blue-500"
-                        }`}
-                    >
-                      <FontAwesomeIcon icon={faHeart} />
-                      <div className="flex text-xl">
+                      <button
+                        onClick={() => toggleFavorite(recipe._id)}
+                        className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id) ? "text-red-500" : "text-blue-500"
+                          }`}
+                      >
+                        <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faHeart} />
+                        <div className="flex text-xl">
 
-                        {isRecipeFavorite(recipe._id) ? (
-                          <>
-                           Tap to Remove
-                          </>
+                          {isRecipeFavorite(recipe._id) ? (
+                            <>
+                              {/* Tap to Remove */}
+                            </>
 
-                        ) : (
-                          <>
-                           Tap to  Add
-                          </>
-                        )}
-                      </div>
-                    </button>
+                          ) : (
+                            <>
+                              {/* Tap to  Add */}
+                            </>
+                          )}
+                        </div>
+                      </button>
 
                       <div className="text-center">
                         <h2 className="text-2xl font-bold text-indigo-800">
@@ -209,14 +214,14 @@ const FavouriteRecipe = () => {
                         <div>
 
                           <Link className="text-xl text-green-400" to={`/update-recipe/${recipe._id}`}>
-                            <FontAwesomeIcon icon={faPen} />
+                            <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faPen} />
                           </Link>
 
                           <button
                             onClick={() => deleteRecipe(recipe._id)}
                             className="px-4 py-2 text-2xl text-red-500 rounded"
                           >
-                            <FontAwesomeIcon icon={faTrash} />
+                            <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faTrash} />
                           </button>
                         </div>
                       ) : (
@@ -251,7 +256,7 @@ const FavouriteRecipe = () => {
                       <div className="flex">
                         <FontAwesomeIcon
                           icon={faBook}
-                          className="text-indigo-500 text-2xl"
+                          className="text-indigo-500 text-2xl "
                         />
                         <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
                           Instructions
@@ -289,13 +294,20 @@ const FavouriteRecipe = () => {
                       </div>
                     ) : null}
 
+                   
                     {recipe.comments.length > 0 && (
-                      <p className="mt-4 text-xl font-bold text-gray-800 mb-4">
-                        Comments
-                      </p>
+                      <div className="mt-4 text-gray-800 -mt-8 mb-4  text-right">
+                        
+                        <button
+                          onClick={() => toggleCommentsVisibility(recipe._id)}
+                          className="text-md text-right  text-black rounded-md bg-gray-400 p-1 font-bold shadow-lg hover:scale-105 transition-transform transform"
+                        >
+                          {commentsVisible ? "Hide Comments" : "Show Comments"}
+                        </button>
+                      </div>
                     )}
 
-                    {recipe.comments.length > 0 &&
+                    {commentsVisible && recipe.comments.length > 0 && (
                       recipe.comments.map((ele, index) => (
                         <div
                           key={index}
@@ -306,7 +318,8 @@ const FavouriteRecipe = () => {
                           </div>
                           <div className="text-gray-700">{ele.content}</div>
                         </div>
-                      ))}
+                      ))
+                    )}
                   </div>
                 )
               }
