@@ -1,10 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useGetUserID } from "../../hooks/useGetUserID";
 
 const NavBar = () => {
   const [cookies, setCookies] = useCookies(["access_token"]);
   const navigation = useNavigate();
+  const user = useGetUserID();
 
   const handleLogOut = () => {
     setCookies("access_token", JSON.stringify(""));
@@ -32,6 +34,15 @@ const NavBar = () => {
             </li>
             <li onClick={handleLogOut}>
               <Link>Log Out</Link>
+            </li>
+            <li>
+              <Link>
+                <img
+                  src={JSON.parse(user).avatar}
+                  alt=""
+                  className="w-10 h-10 rounded-full mr-4"
+                />
+              </Link>
             </li>
           </ul>
         ) : (
