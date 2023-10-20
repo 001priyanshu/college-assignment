@@ -152,7 +152,13 @@ export const Home = () => {
                 <div className="">
                   <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
                   <h3 className="text-lg mt-2 font-semibold text-indigo-800">Instructions</h3>
-                  <p className="text-gray-700 text-lg">{recipe.instructions}</p>
+                  <ul className="pl-4 text-gray-700">
+                    {recipe.instructions.map((instruction, index) => (
+                      <li key={index} className="text-lg">
+                        {instruction}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
