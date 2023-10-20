@@ -4,16 +4,24 @@ import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { storage } from "../firebase/firebase.init";
 import { ref, getDownloadURL } from "firebase/storage";
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';  
+
+const options = [
+  'lunch', 'dinner', 'supper','breakfast','desert'
+];
 
 const CreateNew = () => {
   const [cookies] = useCookies(["access_token"]);
   const [selectedImage, setSelectedImage] = useState(null);
+  
   const [recipe, setRecipe] = useState({
     name: "",
     description: "",
     ingredients: [],
     instructions: "",
     imageUrl: "",
+    maealType:"",
   });
 
   const navigate = useNavigate();
@@ -24,6 +32,12 @@ const CreateNew = () => {
 
     setRecipe({ ...recipe, [name]: name === "photo" ? selectedFile : value });
     setSelectedImage(selectedFile);
+  };
+  const handleRecipeType = (selectedOption) => {
+    const newMealType = selectedOption.value;
+    
+    setRecipe({ ...recipe, maealType: newMealType });
+  
   };
 
   const handleIngredientChange = (event, index) => {
@@ -56,7 +70,7 @@ const CreateNew = () => {
 
         alert("Recipe Created");
         navigate("/");
-      }
+      } 
     } catch (error) {
       console.error(error);
     }
@@ -125,6 +139,15 @@ const CreateNew = () => {
             className="w-full px-3 py-2 border rounded-md"
           ></textarea>
         </div>
+        <div>
+          <label htmlFor="mealType" className="block text-sm font-medium">
+            Meal Type 
+          </label>
+          <Dropdown options={options} onChange={handleRecipeType} value={recipe.maealType} placeholder="Select an option" />
+
+        </div>
+       
+
         <div>
           <label htmlFor="imageUrl" className="block text-sm font-medium">
             Image

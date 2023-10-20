@@ -10,9 +10,10 @@ const NavBar = () => {
   };
 
   return (
-    <nav>
+
+    <nav className="text-blue-500 bg-black">
       <div className="nav-wrapper teal lighten-2">
-        {cookies.access_token.length > 0 ? (
+        {cookies.access_token?.length > 0 ? (
           <ul id="nav-mobile" className="left hide-on-med-and-down">
             <li>
               <Link to="/">Recipes</Link>
