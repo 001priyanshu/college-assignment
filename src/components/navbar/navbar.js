@@ -1,20 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 const NavBar = () => {
   const [cookies, setCookies] = useCookies(["access_token"]);
+  const navigation = useNavigate();
 
   const handleLogOut = () => {
     setCookies("access_token", JSON.stringify(""));
+    window.localStorage.removeItem("userID");
+
+    navigation("/");
   };
 
   return (
-
-    <nav className="text-blue-500 bg-black">
-      <div className="nav-wrapper teal lighten-2">
+    <nav className="text-blue-500 bg-black w-screen">
+      <div className="nav-wrapper teal lighten-2 w-full ">
         {cookies.access_token?.length > 0 ? (
-          <ul id="nav-mobile" className="left hide-on-med-and-down">
+          <ul
+            id="nav-mobile"
+            className="hide-on-med-and-down flex  w-full items-center justify-center "
+          >
             <li>
               <Link to="/">Recipes</Link>
             </li>
@@ -25,11 +31,14 @@ const NavBar = () => {
               <Link to="/fav-recipe">My Favourite</Link>
             </li>
             <li onClick={handleLogOut}>
-              <Link to="collapsible.html">Log Out</Link>
+              <Link>Log Out</Link>
             </li>
           </ul>
         ) : (
-          <ul id="nav-mobile" className="left hide-on-med-and-down">
+          <ul
+            id="nav-mobile"
+            className=" hide-on-med-and-down flex  w-full items-center justify-center "
+          >
             <li>
               <Link to="/">Recipes</Link>
             </li>

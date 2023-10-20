@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useGetUserID } from "../../hooks/useGetUserID";
 import { useNavigate } from "react-router-dom";
+import { RotatingLines } from "react-loader-spinner";
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
@@ -17,19 +18,15 @@ export const Home = () => {
   const [favoriteRecipes, setFavoriteRecipes] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const user = useGetUserID();
+  const loggedInuserId = user ? JSON.parse(user)._id : "";
   const navigate = useNavigate();
+  const [comment, setComment] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigateSignIn = () => {
     if (cookies.access_token.length === 0) {
       navigate("/signin");
-      return;
     }
-  };
-
-  const checkLoggedIn = () => {
-    if (cookies.access_token.length === 0) {
-      return false;
-    } else return true;
   };
 
   const fetchRecipes = async () => {
@@ -41,6 +38,7 @@ export const Home = () => {
         }
       );
       setRecipes(response.data.allRecipes);
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -49,9 +47,7 @@ export const Home = () => {
   const fetchFavRecipes = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/user/favoriteRecipes/${
-          JSON.parse(user)._id
-        }`,
+        `http://localhost:5000/api/user/favoriteRecipes/${loggedInuserId}`,
         {
           headers: { authorization: cookies.access_token },
         }
@@ -115,6 +111,25 @@ export const Home = () => {
     }
   };
 
+  const handleAddComment = async (recipeID) => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/comment/addComment/${recipeID}`,
+        {
+          content: comment,
+        },
+        {
+          headers: { authorization: cookies.access_token },
+        }
+      );
+
+      setComment("");
+      fetchRecipes();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const filteredRecipes = searchInput
     ? recipes.filter((recipe) => {
         const searchStr = searchInput.toLowerCase();
@@ -128,7 +143,7 @@ export const Home = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen p-2">
-      <h1 className="text-center p-8 text-4xl font-serif font-extrabold m-y-2 text-blue-500">
+      <h1 className="text-center p-8 text-4xl font-serif font-extrabold my-2 text-blue-500">
         Recipes
       </h1>
       <div className="flex justify-center mb-8">
@@ -140,99 +155,142 @@ export const Home = () => {
           className="p-2 border border-gray-300 rounded-md w-full max-w-md"
         />
       </div>
-      <div className="flex justify-center">
-        <div className="space-y-8 w-full md:w-1/2">
-          {filteredRecipes.map((recipe) => (
-            <div
-              key={recipe._id}
-              className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
-            >
-              <div className="flex justify-between mb-4">
-                <button
-                  onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 text-3xl rounded ${
-                    isRecipeFavorite(recipe._id)
-                      ? "text-red-500 "
-                      : "text-blue-500 "
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faHeart} />
-                </button>
-
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold  text-indigo-800">
-                    {recipe.name}
-                  </h2>
-                  <h4 className="text-xl mt-2 text-gray-700 font-bold">
-                    {recipe.mealType}
-                  </h4>
-                </div>
-
-                <button
-                  onClick={() => deleteRecipe(recipe._id)}
-                  className={`px-4 py-2 text-3xl ${
-                    checkLoggedIn() === true ? "text-red-500 " : "text-white"
-                  }  rounded`}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
-              <p className="mt-2 text-gray-700  text-center">
-                {recipe.description}
-              </p>
-
-              <hr className="my-4 border-t border-gray-300" />
-              <div>
-                <div className="">
-                  <div className=" flex">
-                    <FontAwesomeIcon
-                      icon={faList}
-                      className="text-indigo-500 text-2xl w-max"
-                    />
-                    <h3 className="text-lg -mt-1 ml-2 font-semibold  text-indigo-800">
-                      Ingredients
-                    </h3>
-                  </div>
-                  <ul className="pl-4 text-gray-700">
-                    {recipe.ingredients.map((ingredient, index) => (
-                      <li key={index} className="text-lg">
-                        {ingredient}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <hr className="my-4 border-t border-gray-300" />
-              <div>
-                <div className="">
-                  <div className="flex">
-                    <FontAwesomeIcon
-                      icon={faBook}
-                      className="text-indigo-500 text-2xl"
-                    />
-                    <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
-                      Instructions
-                    </h3>
-                  </div>
-                  <ul className="pl-4 text-gray-700">
-                    {recipe.instructions.map((instruction, index) => (
-                      <li key={index} className="text-lg">
-                        {instruction}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <img
-                src={recipe.imageUrl}
-                alt={recipe.name}
-                className="mt-4 w-full h-96 object-cover rounded"
-              />
-            </div>
-          ))}
+      {isLoading ? (
+        <div className="flex justify-center">
+          <RotatingLines type="Oval" color="#00BFFF" height={100} width={100} />
         </div>
-      </div>
+      ) : (
+        <div className="flex justify-center">
+          <div className="space-y-8 w-full md:w-1/2">
+            {filteredRecipes.map((recipe) => {
+              console.log(recipe.comments);
+              return (
+                <div
+                  key={recipe._id}
+                  className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
+                >
+                  <div className="flex justify-between mb-4">
+                    <button
+                      onClick={() => toggleFavorite(recipe._id)}
+                      className={`px-4 py-2 text-3xl rounded ${
+                        isRecipeFavorite(recipe._id)
+                          ? "text-red-500"
+                          : "text-blue-500"
+                      }`}
+                    >
+                      <FontAwesomeIcon icon={faHeart} />
+                    </button>
+
+                    <div className="text-center">
+                      <h2 className="text-2xl font-bold text-indigo-800">
+                        {recipe.name}
+                      </h2>
+                      <h4 className="text-xl mt-2 text-gray-700 font-bold">
+                        {recipe.mealType}
+                      </h4>
+                    </div>
+
+                    {user && recipe.userId === loggedInuserId ? (
+                      <button
+                        onClick={() => deleteRecipe(recipe._id)}
+                        className="px-4 py-2 text-3xl text-red-500 rounded"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
+                  </div>
+                  <p className="mt-2 text-gray-700 text-center">
+                    {recipe.description}
+                  </p>
+
+                  <hr className="my-4 border-t border-gray-300" />
+                  <div>
+                    <div className=" flex">
+                      <FontAwesomeIcon
+                        icon={faList}
+                        className="text-indigo-500 text-2xl w-max"
+                      />
+                      <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
+                        Ingredients
+                      </h3>
+                    </div>
+                    <ul className="pl-4 text-gray-700">
+                      {recipe.ingredients.map((ingredient, index) => (
+                        <li key={index} className="text-lg">
+                          {ingredient}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <hr className="my-4 border-t border-gray-300" />
+                  <div>
+                    <div className="flex">
+                      <FontAwesomeIcon
+                        icon={faBook}
+                        className="text-indigo-500 text-2xl"
+                      />
+                      <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
+                        Instructions
+                      </h3>
+                    </div>
+                    <ul className="pl-4 text-gray-700">
+                      {recipe.instructions.map((instruction, index) => (
+                        <li key={index} className="text-lg">
+                          {instruction}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <img
+                    src={recipe.imageUrl}
+                    alt={recipe.name}
+                    className="mt-4 w-full h-96 object-cover rounded"
+                  />
+
+                  {user ? (
+                    <div className="mt-4">
+                      <textarea
+                        placeholder="Add a comment..."
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        className="p-2 border border-gray-300 rounded-md w-full"
+                      />
+                      <button
+                        onClick={() => handleAddComment(recipe._id)}
+                        className="bg-blue-500 text-white p-2 rounded-md mt-2"
+                      >
+                        Add Comment
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {recipe.comments.length > 0 && (
+                    <p className="mt-4 text-xl font-bold text-gray-800 mb-4">
+                      Comments
+                    </p>
+                  )}
+
+                  {recipe.comments.length > 0 &&
+                    recipe.comments.map((ele, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-100 border p-4 my-4 rounded-lg"
+                      >
+                        <div className="font-semibold text-black">
+                          {ele.user.name}
+                        </div>
+                        <div className="text-gray-700">{ele.content}</div>
+                      </div>
+                    ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
