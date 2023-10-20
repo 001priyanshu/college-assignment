@@ -168,18 +168,30 @@ export const Home = () => {
               return (
                 <div
                   key={recipe._id}
-                  className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
+                  className="bg-white p-4 shadow-lg rounded-lg"
                 >
                   <div className="flex justify-between mb-4">
                     <button
                       onClick={() => toggleFavorite(recipe._id)}
-                      className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id)
-                        ? "text-red-500"
-                        : "text-blue-500"
+                      className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id) ? "text-red-500" : "text-blue-500"
                         }`}
                     >
                       <FontAwesomeIcon icon={faHeart} />
+                      <div className="flex text-xl">
+
+                        {isRecipeFavorite(recipe._id) ? (
+                          <>
+                           Tap to Remove
+                          </>
+
+                        ) : (
+                          <>
+                           Tap to  Add
+                          </>
+                        )}
+                      </div>
                     </button>
+
 
                     <div className="text-center">
                       <h2 className="text-2xl font-bold text-indigo-800">
@@ -193,16 +205,13 @@ export const Home = () => {
                     {user && recipe.userId === loggedInuserId ? (
                       <div>
 
-                        <Link to={`/update-recipe/${recipe._id}`}>
+                        <Link className="text-xl text-green-400" to={`/update-recipe/${recipe._id}`}>
                           <FontAwesomeIcon icon={faPen} />
                         </Link>
 
-
-
-
                         <button
                           onClick={() => deleteRecipe(recipe._id)}
-                          className="px-4 py-2 text-3xl text-red-500 rounded"
+                          className="px-4 py-2 text-2xl text-red-500 rounded"
                         >
                           <FontAwesomeIcon icon={faTrash} />
                         </button>
@@ -221,9 +230,9 @@ export const Home = () => {
                     <div className=" flex">
                       <FontAwesomeIcon
                         icon={faList}
-                        className="text-indigo-500 text-2xl w-max"
+                        className="text-indigo-500 text-xl w-max"
                       />
-                      <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
+                      <h3 className="text-xl -mt-1 ml-2 font-semibold text-indigo-800">
                         Ingredients
                       </h3>
                     </div>
@@ -240,7 +249,7 @@ export const Home = () => {
                     <div className="flex">
                       <FontAwesomeIcon
                         icon={faBook}
-                        className="text-indigo-500 text-2xl"
+                        className="text-indigo-500 text-xl"
                       />
                       <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
                         Instructions
