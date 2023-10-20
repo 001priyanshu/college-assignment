@@ -38,7 +38,7 @@ const NavBar = () => {
               <li onClick={handleLogOut}>
                 <Link>Log Out</Link>
               </li>
-              <li>
+              <li className="mt-4">
                 <Link>
                   <img
                     src={JSON.parse(user).avatar}
