@@ -16,7 +16,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="text-blue-500 bg-black w-screen">
+    <nav className="text-blue-500 bg-black ">
       <div className="nav-wrapper teal lighten-2 w-full ">
         {cookies.access_token?.length > 0 ? (
           <ul

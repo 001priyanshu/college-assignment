@@ -190,7 +190,7 @@ const CreateNew = () => {
           <Dropdown
             options={options}
             onChange={handleRecipeType}
-            value={recipe.maealType}
+            value={recipe.mealType}
             placeholder="Select an option"
           />
         </div>

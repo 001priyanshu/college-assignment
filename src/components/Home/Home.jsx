@@ -7,10 +7,12 @@ import {
   faTrash,
   faBook,
   faList,
+  faPen
 } from "@fortawesome/free-solid-svg-icons";
 import { useGetUserID } from "../../hooks/useGetUserID";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
+
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
@@ -132,17 +134,17 @@ export const Home = () => {
 
   const filteredRecipes = searchInput
     ? recipes.filter((recipe) => {
-        const searchStr = searchInput.toLowerCase();
-        return (
-          recipe.name.toLowerCase().includes(searchStr) ||
-          recipe.description.toLowerCase().includes(searchStr) ||
-          recipe.mealType.toLowerCase().includes(searchStr)
-        );
-      })
+      const searchStr = searchInput.toLowerCase();
+      return (
+        recipe.name.toLowerCase().includes(searchStr) ||
+        recipe.description.toLowerCase().includes(searchStr) ||
+        recipe.mealType.toLowerCase().includes(searchStr)
+      );
+    })
     : recipes;
 
   return (
-    <div className="bg-gray-100 min-h-screen p-2">
+    <div className="bg-gray-100  min-h-screen p-2">
       <h1 className="text-center p-8 text-4xl font-serif font-extrabold my-2 text-blue-500">
         Recipes
       </h1>
@@ -163,7 +165,6 @@ export const Home = () => {
         <div className="flex justify-center">
           <div className="space-y-8 w-full md:w-1/2">
             {filteredRecipes.map((recipe) => {
-              console.log(recipe.comments);
               return (
                 <div
                   key={recipe._id}
@@ -172,11 +173,10 @@ export const Home = () => {
                   <div className="flex justify-between mb-4">
                     <button
                       onClick={() => toggleFavorite(recipe._id)}
-                      className={`px-4 py-2 text-3xl rounded ${
-                        isRecipeFavorite(recipe._id)
-                          ? "text-red-500"
-                          : "text-blue-500"
-                      }`}
+                      className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id)
+                        ? "text-red-500"
+                        : "text-blue-500"
+                        }`}
                     >
                       <FontAwesomeIcon icon={faHeart} />
                     </button>
@@ -191,12 +191,23 @@ export const Home = () => {
                     </div>
 
                     {user && recipe.userId === loggedInuserId ? (
-                      <button
-                        onClick={() => deleteRecipe(recipe._id)}
-                        className="px-4 py-2 text-3xl text-red-500 rounded"
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </button>
+                      <div>
+
+                        <Link to={`/update-recipe/${recipe._id}`}>
+                          <FontAwesomeIcon icon={faPen} />
+                        </Link>
+
+
+
+
+                        <button
+                          onClick={() => deleteRecipe(recipe._id)}
+                          className="px-4 py-2 text-3xl text-red-500 rounded"
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                      </div>
+
                     ) : (
                       <div></div>
                     )}
@@ -286,7 +297,7 @@ export const Home = () => {
                       </div>
                     ))}
                 </div>
-              );
+              )
             })}
           </div>
         </div>
