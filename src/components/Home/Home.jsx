@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faTrash, faBook, faList } from "@fortawesome/free-solid-svg-icons";
-
+import {
+  faHeart,
+  faTrash,
+  faBook,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 
 const userID = JSON.parse(window.localStorage.getItem("userID"));
-
-
 
 export const Home = () => {
   const [cookies] = useCookies(["access_token"]);
@@ -24,7 +26,6 @@ export const Home = () => {
         }
       );
       setRecipes(response.data.allRecipes);
-
     } catch (err) {
       console.log(err);
     }
@@ -79,15 +80,16 @@ export const Home = () => {
       console.log(err);
     }
   };
+
   const filteredRecipes = searchInput
     ? recipes.filter((recipe) => {
-      const searchStr = searchInput.toLowerCase();
-      return (
-        recipe.name.toLowerCase().includes(searchStr) ||
-        recipe.description.toLowerCase().includes(searchStr) ||
-        recipe.mealType.toLowerCase().includes(searchStr)
-      );
-    })
+        const searchStr = searchInput.toLowerCase();
+        return (
+          recipe.name.toLowerCase().includes(searchStr) ||
+          recipe.description.toLowerCase().includes(searchStr) ||
+          recipe.mealType.toLowerCase().includes(searchStr)
+        );
+      })
     : recipes;
 
   return (
@@ -114,21 +116,24 @@ export const Home = () => {
               <div className="flex justify-between mb-4">
                 <button
                   onClick={() => toggleFavorite(recipe._id)}
-                  className={`px-4 py-2 text-3xl  rounded ${isRecipeFavorite(recipe._id)
-                    ? "text-red-500 "
-                    : "text-blue-500 "
-                    }`}
+                  className={`px-4 py-2 text-3xl  rounded ${
+                    isRecipeFavorite(recipe._id)
+                      ? "text-red-500 "
+                      : "text-blue-500 "
+                  }`}
                 >
                   <FontAwesomeIcon icon={faHeart} />
-
                 </button>
 
                 <div className="text-center">
-
-                  <h2 className="text-2xl font-bold  text-indigo-800">{recipe.name}</h2>
-                  <h4 className="text-xl mt-2 text-gray-700 font-bold">{recipe.mealType}</h4>
+                  <h2 className="text-2xl font-bold  text-indigo-800">
+                    {recipe.name}
+                  </h2>
+                  <h4 className="text-xl mt-2 text-gray-700 font-bold">
+                    {recipe.mealType}
+                  </h4>
                 </div>
-            
+
                 {userID && recipe.userId === userID._id ? (
                   <button
                     onClick={() => deleteRecipe(recipe._id)}
@@ -136,16 +141,25 @@ export const Home = () => {
                   >
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
-                ) : <div></div>}  
+                ) : (
+                  <div></div>
+                )}
               </div>
-              <p className="mt-2 text-gray-700  text-center">{recipe.description}</p>
+              <p className="mt-2 text-gray-700  text-center">
+                {recipe.description}
+              </p>
 
               <hr className="my-4 border-t border-gray-300" />
               <div>
                 <div className="">
                   <div className=" flex">
-                    <FontAwesomeIcon icon={faList} className="text-indigo-500 text-2xl w-max" />
-                    <h3 className="text-lg -mt-1 ml-2 font-semibold  text-indigo-800">Ingredients</h3>
+                    <FontAwesomeIcon
+                      icon={faList}
+                      className="text-indigo-500 text-2xl w-max"
+                    />
+                    <h3 className="text-lg -mt-1 ml-2 font-semibold  text-indigo-800">
+                      Ingredients
+                    </h3>
                   </div>
                   <ul className="pl-4 text-gray-700">
                     {recipe.ingredients.map((ingredient, index) => (
@@ -160,8 +174,13 @@ export const Home = () => {
               <div>
                 <div className="">
                   <div className="flex">
-                    <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
-                    <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">Instructions</h3>
+                    <FontAwesomeIcon
+                      icon={faBook}
+                      className="text-indigo-500 text-2xl"
+                    />
+                    <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">
+                      Instructions
+                    </h3>
                   </div>
                   <ul className="pl-4 text-gray-700">
                     {recipe.instructions.map((instruction, index) => (
@@ -178,7 +197,6 @@ export const Home = () => {
                 alt={recipe.name}
                 className="mt-4 w-full h-96 object-cover rounded"
               />
-
             </div>
           ))}
         </div>
