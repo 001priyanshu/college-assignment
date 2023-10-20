@@ -7,10 +7,12 @@ import {
   faTrash,
   faBook,
   faList,
+  faPen
 } from "@fortawesome/free-solid-svg-icons";
 import { useGetUserID } from "../../hooks/useGetUserID";
 import { useNavigate } from "react-router-dom";
 import { RotatingLines } from "react-loader-spinner";
+import { Link } from "react-router-dom";
 
 
 const FavouriteRecipe = () => {
@@ -145,7 +147,7 @@ const FavouriteRecipe = () => {
   return (
     <div className="bg-gray-100  min-h-screen p-2">
       <h1 className="text-center p-8 text-4xl font-serif font-extrabold my-2 text-blue-500">
-       Fav Recipes
+        Fav Recipes
       </h1>
       <div className="flex justify-center mb-8">
         <input
@@ -173,15 +175,26 @@ const FavouriteRecipe = () => {
                     className="bg-white p-4 shadow-lg rounded-lg transition-transform transform hover:scale-105"
                   >
                     <div className="flex justify-between mb-4">
-                      <button
-                        onClick={() => toggleFavorite(recipe._id)}
-                        className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id)
-                          ? "text-red-500"
-                          : "text-blue-500"
-                          }`}
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
-                      </button>
+                    <button
+                      onClick={() => toggleFavorite(recipe._id)}
+                      className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id) ? "text-red-500" : "text-blue-500"
+                        }`}
+                    >
+                      <FontAwesomeIcon icon={faHeart} />
+                      <div className="flex text-xl">
+
+                        {isRecipeFavorite(recipe._id) ? (
+                          <>
+                           Tap to Remove
+                          </>
+
+                        ) : (
+                          <>
+                           Tap to  Add
+                          </>
+                        )}
+                      </div>
+                    </button>
 
                       <div className="text-center">
                         <h2 className="text-2xl font-bold text-indigo-800">
@@ -193,12 +206,19 @@ const FavouriteRecipe = () => {
                       </div>
 
                       {user && recipe.userId === loggedInuserId ? (
-                        <button
-                          onClick={() => deleteRecipe(recipe._id)}
-                          className="px-4 py-2 text-3xl text-red-500 rounded"
-                        >
-                          <FontAwesomeIcon icon={faTrash} />
-                        </button>
+                        <div>
+
+                          <Link className="text-xl text-green-400" to={`/update-recipe/${recipe._id}`}>
+                            <FontAwesomeIcon icon={faPen} />
+                          </Link>
+
+                          <button
+                            onClick={() => deleteRecipe(recipe._id)}
+                            className="px-4 py-2 text-2xl text-red-500 rounded"
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </button>
+                        </div>
                       ) : (
                         <div></div>
                       )}

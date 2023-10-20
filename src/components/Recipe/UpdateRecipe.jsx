@@ -270,11 +270,12 @@ const UpdateRecipe = () => {
                         )}
                     </div>
                 </div>
+               
                 <button
                     type="submit"
                     className="w-full py-2 bg-blue-500 text-white rounded-md"
                 >
-                    Create Recipe
+                    Update Recipe
                 </button>
             </form>
         </div>
