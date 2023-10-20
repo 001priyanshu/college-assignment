@@ -24,6 +24,8 @@ export const Home = () => {
   const navigate = useNavigate();
   const [comment, setComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [commentsVisible, setCommentsVisible] = useState(false);
+
 
   const navigateSignIn = () => {
     if (cookies.access_token.length === 0) {
@@ -46,6 +48,9 @@ export const Home = () => {
     }
   };
 
+  const toggleCommentsVisibility = () => {
+    setCommentsVisible(!commentsVisible);
+  };
   const fetchFavRecipes = async () => {
     try {
       const response = await axios.get(
@@ -176,17 +181,17 @@ export const Home = () => {
                       className={`px-4 py-2 text-3xl rounded ${isRecipeFavorite(recipe._id) ? "text-red-500" : "text-blue-500"
                         }`}
                     >
-                      <FontAwesomeIcon icon={faHeart} />
+                      <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faHeart} />
                       <div className="flex text-xl">
 
                         {isRecipeFavorite(recipe._id) ? (
                           <>
-                           Tap to Remove
+                            Tap to Remove
                           </>
 
                         ) : (
                           <>
-                           Tap to  Add
+                            Tap to  Add
                           </>
                         )}
                       </div>
@@ -205,15 +210,15 @@ export const Home = () => {
                     {user && recipe.userId === loggedInuserId ? (
                       <div>
 
-                        <Link className="text-xl text-green-400" to={`/update-recipe/${recipe._id}`}>
-                          <FontAwesomeIcon icon={faPen} />
+                        <Link className="text-xl text-green-400 shadow-lg hover:scale-105 transition-transform transform" to={`/update-recipe/${recipe._id}`}>
+                          <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faPen} />
                         </Link>
 
                         <button
                           onClick={() => deleteRecipe(recipe._id)}
-                          className="px-4 py-2 text-2xl text-red-500 rounded"
+                          className="px-4 py-2 text-2xl text-red-500 rounded "
                         >
-                          <FontAwesomeIcon icon={faTrash} />
+                          <FontAwesomeIcon className="shadow-lg hover:scale-110 transition-transform transform" icon={faTrash} />
                         </button>
                       </div>
 
@@ -288,12 +293,18 @@ export const Home = () => {
                   ) : null}
 
                   {recipe.comments.length > 0 && (
-                    <p className="mt-4 text-xl font-bold text-gray-800 mb-4">
-                      Comments
-                    </p>
+                    <div className="mt-4 text-gray-800 -mt-8 mb-4  text-right">
+
+                      <button
+                        onClick={() => toggleCommentsVisibility(recipe._id)}
+                        className="text-md text-right  text-black rounded-md bg-gray-400 p-1 font-bold shadow-lg hover:scale-105 transition-transform transform"
+                      >
+                        {commentsVisible ? "Hide Comments" : "Show Comments"}
+                      </button>
+                    </div>
                   )}
 
-                  {recipe.comments.length > 0 &&
+                  {commentsVisible && recipe.comments.length > 0 && (
                     recipe.comments.map((ele, index) => (
                       <div
                         key={index}
@@ -304,7 +315,8 @@ export const Home = () => {
                         </div>
                         <div className="text-gray-700">{ele.content}</div>
                       </div>
-                    ))}
+                    ))
+                  )}
                 </div>
               )
             })}
