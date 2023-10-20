@@ -128,7 +128,7 @@ export const Home = () => {
                   className="px-4 py-2 text-3xl text-red-500 rounded"
                 >
                   <FontAwesomeIcon icon={faTrash} />
-                  
+
                 </button>
               </div>
               <p className="mt-2 text-gray-700  text-center">{recipe.description}</p>
@@ -136,8 +136,10 @@ export const Home = () => {
               <hr className="my-4 border-t border-gray-300" />
               <div>
                 <div className="">
-                  <FontAwesomeIcon icon={faList} className="text-indigo-500 text-2xl" />
-                  <h3 className="text-lg mt-2 font-semibold text-indigo-800">Ingredients</h3>
+                  <div className=" flex">
+                    <FontAwesomeIcon icon={faList} className="text-indigo-500 text-2xl w-max" />
+                    <h3 className="text-lg -mt-1 ml-2 font-semibold  text-indigo-800">Ingredients</h3>
+                  </div>
                   <ul className="pl-4 text-gray-700">
                     {recipe.ingredients.map((ingredient, index) => (
                       <li key={index} className="text-lg">
@@ -150,8 +152,10 @@ export const Home = () => {
               <hr className="my-4 border-t border-gray-300" />
               <div>
                 <div className="">
+                  <div className="flex">
                   <FontAwesomeIcon icon={faBook} className="text-indigo-500 text-2xl" />
-                  <h3 className="text-lg mt-2 font-semibold text-indigo-800">Instructions</h3>
+                  <h3 className="text-lg -mt-1 ml-2 font-semibold text-indigo-800">Instructions</h3>
+                  </div>
                   <ul className="pl-4 text-gray-700">
                     {recipe.instructions.map((instruction, index) => (
                       <li key={index} className="text-lg">
